@@ -7,11 +7,11 @@ export function SectionHeading({
   action,
   className,
 }: {
-  eyebrow?: string;
+  eyebrow?: string | undefined;
   title: string;
-  description?: string;
+  description?: string | undefined;
   action?: React.ReactNode;
-  className?: string;
+  className?: string | undefined;
 }) {
   return (
     <div className={cn("flex flex-wrap items-end justify-between gap-4", className)}>
