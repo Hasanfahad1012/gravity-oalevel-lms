@@ -64,7 +64,7 @@ function AuthPage() {
     setBusy(true);
     try {
       if (isSignup) {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -73,10 +73,14 @@ function AuthPage() {
           },
         });
         if (error) throw error;
-        toast.success("Account created", {
-          description: "Check your inbox to confirm your email, then sign in.",
-        });
-        setIsSignup(false);
+        if (data.session) {
+          toast.success("Welcome to Gravity Institute");
+        } else {
+          toast.success("Account created", {
+            description: "Check your inbox to confirm your email, then sign in.",
+          });
+          setIsSignup(false);
+        }
       } else {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
