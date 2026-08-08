@@ -154,12 +154,34 @@ export function mapFeeRows(grid: string[][]): { rows: FeeRow[]; headers: string[
  * CSV/webhook URL, and returns a URL that responds with CSV.
  */
 export function toCsvUrl(input: string): string {
+  return csvUrlCandidates(input)[0] ?? input.trim();
+}
+
+/**
+ * Ordered list of URLs to try. Google serves published sheets from several
+ * endpoints; a plain /edit share link 401s unless one of these is used.
+ */
+export function csvUrlCandidates(input: string): string[] {
   const url = input.trim();
-  const sheetMatch = url.match(/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-  if (sheetMatch && !url.includes("output=csv") && !url.includes("/pub?")) {
-    const id = sheetMatch[1];
-    const gid = url.match(/[#&?]gid=(\d+)/)?.[1] ?? "0";
-    return `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`;
+  const sheetMatch = url.match(/docs\.google\.com\/spreadsheets\/d\/(?:e\/)?([a-zA-Z0-9-_]+)/);
+  if (!sheetMatch) return [url];
+
+  const id = sheetMatch[1];
+  const gid = url.match(/[#&?]gid=(\d+)/)?.[1] ?? "0";
+
+  if (url.includes("output=csv") || url.includes("format=csv")) return [url];
+
+  // /d/e/<id>/... links are "publish to web" ids and use the pub endpoint.
+  if (/\/spreadsheets\/d\/e\//.test(url)) {
+    return [
+      `https://docs.google.com/spreadsheets/d/e/${id}/pub?gid=${gid}&single=true&output=csv`,
+      `https://docs.google.com/spreadsheets/d/e/${id}/pub?output=csv`,
+    ];
   }
-  return url;
+
+  return [
+    `https://docs.google.com/spreadsheets/d/${id}/export?format=csv&gid=${gid}`,
+    `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=${gid}`,
+    `https://docs.google.com/spreadsheets/d/${id}/pub?gid=${gid}&single=true&output=csv`,
+  ];
 }

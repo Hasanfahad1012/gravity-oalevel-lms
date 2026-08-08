@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { mapFeeRows, parseCsv, toCsvUrl } from "@/lib/fee-csv";
+import { csvUrlCandidates, mapFeeRows, parseCsv } from "@/lib/fee-csv";
 
 type Settings = {
   sheet_url: string | null;
@@ -76,26 +76,32 @@ export const syncFeeSheet = createServerFn({ method: "POST" })
     };
 
     let text = "";
-    try {
-      const res = await fetch(toCsvUrl(sheetUrl), {
-        headers: { Accept: "text/csv,application/json,text/plain,*/*" },
-        redirect: "follow",
-      });
-      if (!res.ok) {
-        return await recordFailure(
-          `The spreadsheet link returned ${res.status}. Make sure it is published or shared as "anyone with the link".`,
-        );
+    let lastProblem = "";
+    for (const candidate of csvUrlCandidates(sheetUrl)) {
+      try {
+        const res = await fetch(candidate, {
+          headers: { Accept: "text/csv,application/json,text/plain,*/*" },
+          redirect: "follow",
+        });
+        if (!res.ok) {
+          lastProblem = `returned ${res.status}`;
+          continue;
+        }
+        const body = await res.text();
+        if (body.trimStart().startsWith("<")) {
+          lastProblem = "returned a sign-in page instead of CSV";
+          continue;
+        }
+        text = body;
+        break;
+      } catch (e) {
+        lastProblem = (e as Error).message || "network error";
       }
-      text = await res.text();
-    } catch (e) {
-      return await recordFailure(
-        `Could not reach the spreadsheet link: ${(e as Error).message ?? "network error"}`,
-      );
     }
 
-    if (text.trimStart().startsWith("<")) {
+    if (!text) {
       return await recordFailure(
-        "That link returned a web page instead of CSV. Use File → Share → Publish to web → CSV, or a direct CSV/webhook URL.",
+        `Google would not share this sheet publicly (${lastProblem}). Open the sheet, then either: File → Share → Publish to web → pick the tab → Comma-separated values (.csv) → Publish and paste that link, or Share → General access → “Anyone with the link” → Viewer.`,
       );
     }
 
