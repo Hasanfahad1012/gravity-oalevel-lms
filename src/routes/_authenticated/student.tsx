@@ -28,6 +28,7 @@ import { useAuth } from "@/lib/auth";
 import { FALLBACK_MODULE, SYLLABUS } from "@/lib/syllabus";
 import { cn } from "@/lib/utils";
 import { QuizRunner } from "@/components/QuizRunner";
+import { McqPractice } from "@/components/McqPractice";
 
 export const Route = createFileRoute("/_authenticated/student")({
   head: () => ({
