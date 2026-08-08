@@ -139,6 +139,51 @@ export type Database = {
         }
         Relationships: []
       }
+      mcq_questions: {
+        Row: {
+          correct_answer: string
+          created_at: string
+          explanation_text_or_image: string
+          id: string
+          options: Json
+          paper_variant: string
+          question_number: number
+          question_text_or_image_url: string
+          session: string
+          subject_code: string
+          topic_tag: string
+          year: number
+        }
+        Insert: {
+          correct_answer?: string
+          created_at?: string
+          explanation_text_or_image?: string
+          id?: string
+          options?: Json
+          paper_variant?: string
+          question_number?: number
+          question_text_or_image_url?: string
+          session?: string
+          subject_code: string
+          topic_tag?: string
+          year: number
+        }
+        Update: {
+          correct_answer?: string
+          created_at?: string
+          explanation_text_or_image?: string
+          id?: string
+          options?: Json
+          paper_variant?: string
+          question_number?: number
+          question_text_or_image_url?: string
+          session?: string
+          subject_code?: string
+          topic_tag?: string
+          year?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -162,27 +207,39 @@ export type Database = {
       }
       quiz_attempts: {
         Row: {
+          answers: Json
           created_at: string
           id: string
-          quiz_id: string
+          mode: string
+          quiz_id: string | null
           score: number
           student_id: string
+          subject_code: string
+          time_taken_seconds: number
           total: number
         }
         Insert: {
+          answers?: Json
           created_at?: string
           id?: string
-          quiz_id: string
+          mode?: string
+          quiz_id?: string | null
           score?: number
           student_id: string
+          subject_code?: string
+          time_taken_seconds?: number
           total?: number
         }
         Update: {
+          answers?: Json
           created_at?: string
           id?: string
-          quiz_id?: string
+          mode?: string
+          quiz_id?: string | null
           score?: number
           student_id?: string
+          subject_code?: string
+          time_taken_seconds?: number
           total?: number
         }
         Relationships: [
