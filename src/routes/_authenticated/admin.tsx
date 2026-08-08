@@ -17,9 +17,11 @@ import {
 } from "recharts";
 import { AlertTriangle, Banknote, GraduationCap, Layers } from "lucide-react";
 import { PortalShell } from "@/components/PortalShell";
+import { FeeSyncBar } from "@/components/FeeSyncPanel";
 import { SectionHeading, StatCard } from "@/components/Primitives";
 import { StatusBadge } from "@/components/StatusBadge";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -48,6 +50,7 @@ const CHART_COLORS = [
 ];
 
 function AdminPortal() {
+  const { roles } = useAuth();
   const subjects = useQuery({
     queryKey: ["subjects"],
     queryFn: async () => {
@@ -91,10 +94,42 @@ function AdminPortal() {
       return data;
     },
   });
+  const feeRecords = useQuery({
+    queryKey: ["fee-records"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("fee_records")
+        .select("*")
+        .order("student_name");
+      if (error) throw error;
+      return data;
+    },
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
+  });
 
   const enrolls = enrollments.data ?? [];
   const subs = submissions.data ?? [];
   const people = profiles.data ?? [];
+  const fees = feeRecords.data ?? [];
+
+  const money = (n: number) =>
+    `${fees[0]?.currency ?? "PKR"} ${Math.round(n).toLocaleString()}`;
+
+  const feeTotals = useMemo(() => {
+    const collected = fees
+      .filter((f) => f.status === "paid")
+      .reduce((a, f) => a + Number(f.amount || 0), 0);
+    const billed = fees.reduce((a, f) => a + Number(f.amount || 0), 0);
+    return {
+      collected,
+      billed,
+      outstanding: billed - collected,
+      paidCount: fees.filter((f) => f.status === "paid").length,
+      overdueCount: fees.filter((f) => f.status === "overdue").length,
+      rate: billed ? Math.round((collected / billed) * 100) : 0,
+    };
+  }, [fees]);
 
   const perStream = useMemo(
     () =>
@@ -102,11 +137,14 @@ function AdminPortal() {
         code: s.code,
         name: `${s.code}`,
         students: enrolls.filter((e) => e.subject_code === s.code).length,
-        revenue: enrolls
-          .filter((e) => e.subject_code === s.code && e.term_fee_paid)
-          .reduce((a, e) => a + Number(e.fee_amount || 0), 0),
+        revenue: fees
+          .filter((f) => f.subject_code === s.code && f.status === "paid")
+          .reduce((a, f) => a + Number(f.amount || 0), 0),
+        outstanding: fees
+          .filter((f) => f.subject_code === s.code && f.status !== "paid")
+          .reduce((a, f) => a + Number(f.amount || 0), 0),
       })),
-    [subjects.data, enrolls],
+    [subjects.data, enrolls, fees],
   );
 
   const engagement = useMemo(() => {
@@ -123,7 +161,6 @@ function AdminPortal() {
     return days;
   }, [subs, attempts.data]);
 
-  const feePaid = enrolls.filter((e) => e.term_fee_paid).length;
   const graded = subs.filter((s) => s.status !== "pending");
   const throughput = subs.length ? Math.round((graded.length / subs.length) * 100) : 0;
 
@@ -160,9 +197,16 @@ function AdminPortal() {
           hint="active O/A Level seats"
         />
         <StatCard label="Grading throughput" value={`${throughput}%`} hint="scripts released" />
-        <StatCard label="Fees settled" value={`${feePaid}/${enrolls.length}`} hint="this term" />
+        <StatCard
+          label="Fees settled"
+          value={money(feeTotals.collected)}
+          hint={`${feeTotals.rate}% of ${money(feeTotals.billed)} billed`}
+        />
+
         <StatCard label="Registered users" value={people.length} hint="all roles" />
       </div>
+
+      <FeeSyncBar isAdmin={roles.includes("admin")} />
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <div className="plate p-6">
@@ -306,7 +350,7 @@ function AdminPortal() {
           </div>
           <div className="mt-4 grid grid-cols-3 gap-3 border-t pt-4 text-center">
             {[
-              [Banknote, "Collected", `${feePaid} seats`],
+              [Banknote, "Collected", `${feeTotals.paidCount} invoices`],
               [Layers, "Streams live", String(perStream.filter((p) => p.students).length)],
               [GraduationCap, "Scripts marked", String(graded.length)],
             ].map(([Icon, label, value]) => {
@@ -428,6 +472,64 @@ function AdminPortal() {
                 <tr>
                   <td colSpan={6} className="py-12 text-center text-sm text-muted-foreground">
                     No enrolment activity yet.
+                  </td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div className="plate mt-8 p-6">
+        <SectionHeading
+          eyebrow="Student payment status"
+          title="Fee ledger from the spreadsheet"
+          description={`${fees.length} rows · ${money(feeTotals.outstanding)} outstanding · ${feeTotals.overdueCount} overdue.`}
+        />
+        <div className="mt-6 overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="hairline text-left">
+                {["Student", "Subject", "Term", "Amount", "Paid on", "Status"].map((h) => (
+                  <th
+                    key={h}
+                    className="px-4 py-3 text-[11px] font-semibold tracking-[0.12em] text-muted-foreground uppercase"
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {fees.map((f) => (
+                <tr key={f.id} className="transition-colors hover:bg-muted/40">
+                  <td className="px-4 py-3.5">
+                    <span className="block font-medium">{f.student_name || f.student_email}</span>
+                    <span className="text-xs text-muted-foreground">{f.student_email}</span>
+                  </td>
+                  <td className="px-4 py-3.5">{f.subject_code || "—"}</td>
+                  <td className="px-4 py-3.5">{f.term || "—"}</td>
+                  <td className="px-4 py-3.5 tabular-nums">
+                    {f.currency} {Number(f.amount).toLocaleString()}
+                  </td>
+                  <td className="px-4 py-3.5 tabular-nums">{f.paid_on ?? "—"}</td>
+                  <td className="px-4 py-3.5">
+                    {f.status === "paid" ? (
+                      <StatusBadge tone="graded">Paid</StatusBadge>
+                    ) : f.status === "overdue" ? (
+                      <StatusBadge tone="risk">Overdue</StatusBadge>
+                    ) : f.status === "partial" ? (
+                      <StatusBadge tone="pending">Partial</StatusBadge>
+                    ) : (
+                      <StatusBadge tone="neutral">Pending</StatusBadge>
+                    )}
+                  </td>
+                </tr>
+              ))}
+              {!fees.length ? (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center text-sm text-muted-foreground">
+                    No fee rows yet — connect a spreadsheet above and press sync.
                   </td>
                 </tr>
               ) : null}

@@ -52,6 +52,93 @@ export type Database = {
           },
         ]
       }
+      fee_records: {
+        Row: {
+          amount: number
+          created_at: string
+          currency: string
+          due_date: string | null
+          id: string
+          invoice_ref: string
+          paid_on: string | null
+          row_key: string
+          status: string
+          student_email: string
+          student_name: string
+          subject_code: string
+          synced_at: string
+          term: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          due_date?: string | null
+          id?: string
+          invoice_ref?: string
+          paid_on?: string | null
+          row_key: string
+          status?: string
+          student_email?: string
+          student_name?: string
+          subject_code?: string
+          synced_at?: string
+          term?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          currency?: string
+          due_date?: string | null
+          id?: string
+          invoice_ref?: string
+          paid_on?: string | null
+          row_key?: string
+          status?: string
+          student_email?: string
+          student_name?: string
+          subject_code?: string
+          synced_at?: string
+          term?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      fee_settings: {
+        Row: {
+          created_at: string
+          id: string
+          last_error: string | null
+          last_row_count: number
+          last_synced_at: string | null
+          sheet_url: string | null
+          singleton: boolean
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          last_row_count?: number
+          last_synced_at?: string | null
+          sheet_url?: string | null
+          singleton?: boolean
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          last_row_count?: number
+          last_synced_at?: string | null
+          sheet_url?: string | null
+          singleton?: boolean
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
