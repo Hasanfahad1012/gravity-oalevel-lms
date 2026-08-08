@@ -99,7 +99,7 @@ export function PortalShell({
               aria-label="Sign out"
               onClick={async () => {
                 await signOut();
-                void navigate({ to: "/auth", replace: true });
+                void navigate({ to: "/auth", search: { mode: "login" as const }, replace: true });
               }}
             >
               <LogOut className="size-4" />
