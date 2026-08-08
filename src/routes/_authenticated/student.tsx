@@ -383,7 +383,10 @@ function StudentPortal() {
                   const pct = a.total ? Math.round((a.score / a.total) * 100) : 0;
                   return (
                     <li key={a.id} className="flex items-center gap-4 py-3">
-                      <span className="flex-1 text-sm font-medium">{quiz?.title ?? "Quiz"}</span>
+                      <span className="flex-1 text-sm font-medium">
+                        {quiz?.title ??
+                          `${a.subject_code || "MCQ"} · ${a.mode === "timed" ? "Timed paper" : "Practice"}`}
+                      </span>
                       <Progress value={pct} className="hidden h-1.5 w-40 sm:block" />
                       <span className="w-16 text-right text-sm font-semibold tabular-nums">
                         {a.score}/{a.total}
