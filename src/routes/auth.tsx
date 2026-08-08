@@ -43,7 +43,7 @@ const ROLES: { value: AppRole; label: string; hint: string }[] = [
 ];
 
 function AuthPage() {
-  const { mode } = Route.useSearch();
+  const { mode, next } = Route.useSearch();
   const navigate = useNavigate();
   const { session, primaryRole, loading } = useAuth();
 
@@ -56,12 +56,16 @@ function AuthPage() {
 
   useEffect(() => {
     if (!loading && session) {
+      if (next) {
+        window.location.href = next;
+        return;
+      }
       void navigate({
         to: primaryRole === "admin" ? "/admin" : primaryRole === "teacher" ? "/teacher" : "/student",
         replace: true,
       });
     }
-  }, [loading, session, primaryRole, navigate]);
+  }, [loading, session, primaryRole, navigate, next]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
