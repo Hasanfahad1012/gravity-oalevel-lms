@@ -194,7 +194,12 @@ function AdminPortal() {
           hint="active O/A Level seats"
         />
         <StatCard label="Grading throughput" value={`${throughput}%`} hint="scripts released" />
-        <StatCard label="Fees settled" value={`${feePaid}/${enrolls.length}`} hint="this term" />
+        <StatCard
+          label="Fees settled"
+          value={money(feeTotals.collected)}
+          hint={`${feeTotals.rate}% of ${money(feeTotals.billed)} billed`}
+        />
+
         <StatCard label="Registered users" value={people.length} hint="all roles" />
       </div>
 
