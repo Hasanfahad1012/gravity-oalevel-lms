@@ -84,7 +84,7 @@ function Landing() {
           ) : (
             <div className="flex items-center gap-2">
               <Button asChild variant="ghost" size="sm">
-                <Link to="/auth">Sign in</Link>
+                <Link to="/auth" search={{ mode: "login" as const }}>Sign in</Link>
               </Button>
               <Button asChild size="sm">
                 <Link to="/auth" search={{ mode: "signup" }}>
@@ -203,7 +203,7 @@ function Landing() {
           </p>
           <div className="relative mt-8">
             <Button asChild size="lg" variant="secondary">
-              <Link to="/auth">Sign in to Gravity</Link>
+              <Link to="/auth" search={{ mode: "login" as const }}>Sign in to Gravity</Link>
             </Button>
           </div>
         </div>

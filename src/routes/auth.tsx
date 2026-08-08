@@ -28,6 +28,10 @@ export const Route = createFileRoute("/auth")({
   }),
   validateSearch: (search: Record<string, unknown>) => ({
     mode: search["mode"] === "signup" ? ("signup" as const) : ("login" as const),
+    next:
+      typeof search["next"] === "string" && search["next"].startsWith("/") && !search["next"].startsWith("//")
+        ? (search["next"] as string)
+        : undefined,
   }),
   component: AuthPage,
 });
@@ -39,7 +43,7 @@ const ROLES: { value: AppRole; label: string; hint: string }[] = [
 ];
 
 function AuthPage() {
-  const { mode } = Route.useSearch();
+  const { mode, next } = Route.useSearch();
   const navigate = useNavigate();
   const { session, primaryRole, loading } = useAuth();
 
@@ -52,12 +56,16 @@ function AuthPage() {
 
   useEffect(() => {
     if (!loading && session) {
+      if (next) {
+        window.location.href = next;
+        return;
+      }
       void navigate({
         to: primaryRole === "admin" ? "/admin" : primaryRole === "teacher" ? "/teacher" : "/student",
         replace: true,
       });
     }
-  }, [loading, session, primaryRole, navigate]);
+  }, [loading, session, primaryRole, navigate, next]);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
