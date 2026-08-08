@@ -131,21 +131,45 @@ function AdminPortal() {
     };
   }, [fees]);
 
-  const perStream = useMemo(
-    () =>
-      (subjects.data ?? []).map((s) => ({
-        code: s.code,
-        name: `${s.code}`,
-        students: enrolls.filter((e) => e.subject_code === s.code).length,
-        revenue: fees
-          .filter((f) => f.subject_code === s.code && f.status === "paid")
-          .reduce((a, f) => a + Number(f.amount || 0), 0),
-        outstanding: fees
-          .filter((f) => f.subject_code === s.code && f.status !== "paid")
-          .reduce((a, f) => a + Number(f.amount || 0), 0),
-      })),
-    [subjects.data, enrolls, fees],
-  );
+  const perStream = useMemo(() => {
+    // Every subject that appears in the syllabus OR in the synced spreadsheet.
+    const codes = new Set<string>();
+    for (const s of subjects.data ?? []) codes.add(s.code);
+    for (const f of fees) {
+      const c = (f.subject_code || "").trim().toUpperCase();
+      if (c) codes.add(c);
+    }
+
+    const rows = [...codes].map((code) => {
+      const rowsFor = fees.filter(
+        (f) => (f.subject_code || "").trim().toUpperCase() === code,
+      );
+      const billed = rowsFor.reduce((a, f) => a + Number(f.amount || 0), 0);
+      const collected = rowsFor
+        .filter((f) => f.status === "paid")
+        .reduce((a, f) => a + Number(f.amount || 0), 0);
+      const sheetStudents = new Set(
+        rowsFor.map((f) => (f.student_email || f.student_name || "").toLowerCase()).filter(Boolean),
+      ).size;
+      const enrolledStudents = new Set(
+        enrolls.filter((e) => e.subject_code === code).map((e) => e.student_id),
+      ).size;
+      return {
+        code,
+        name: code,
+        students: Math.max(sheetStudents, enrolledStudents),
+        billed,
+        revenue: collected,
+        collected,
+        outstanding: billed - collected,
+      };
+    });
+
+    return rows
+      .filter((r) => r.students > 0 || r.billed > 0)
+      .sort((a, b) => b.billed - a.billed || a.code.localeCompare(b.code));
+  }, [subjects.data, enrolls, fees]);
+
 
   const engagement = useMemo(() => {
     const days = Array.from({ length: 14 }, (_, i) => {
@@ -200,8 +224,9 @@ function AdminPortal() {
         <StatCard
           label="Fees settled"
           value={money(feeTotals.collected)}
-          hint={`${feeTotals.rate}% of ${money(feeTotals.billed)} billed`}
+          hint={`${feeTotals.rate}% of ${money(feeTotals.billed)} billed · ${money(feeTotals.outstanding)} outstanding`}
         />
+
 
         <StatCard label="Registered users" value={people.length} hint="all roles" />
       </div>
@@ -317,7 +342,7 @@ function AdminPortal() {
           <SectionHeading
             eyebrow="Finance"
             title="Fee collection by subject"
-            description="Settled term fees against enrolled seats."
+            description="Total billed against collected, per subject in the synced sheet."
           />
           <div className="mt-6 h-[240px]">
             <ResponsiveContainer width="100%" height="100%">
@@ -344,7 +369,20 @@ function AdminPortal() {
                     fontSize: 12,
                   }}
                 />
-                <Bar dataKey="revenue" radius={[6, 6, 0, 0]} fill={CHART_COLORS[1]} />
+                <Bar
+                  dataKey="billed"
+                  name="Billed"
+                  radius={[6, 6, 0, 0]}
+                  fill={CHART_COLORS[4]}
+                  fillOpacity={0.35}
+                />
+                <Bar
+                  dataKey="collected"
+                  name="Collected"
+                  radius={[6, 6, 0, 0]}
+                  fill={CHART_COLORS[1]}
+                />
+
               </BarChart>
             </ResponsiveContainer>
           </div>
