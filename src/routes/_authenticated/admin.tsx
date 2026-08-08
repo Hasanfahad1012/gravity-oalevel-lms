@@ -17,9 +17,11 @@ import {
 } from "recharts";
 import { AlertTriangle, Banknote, GraduationCap, Layers } from "lucide-react";
 import { PortalShell } from "@/components/PortalShell";
+import { FeeSyncBar } from "@/components/FeeSyncPanel";
 import { SectionHeading, StatCard } from "@/components/Primitives";
 import { StatusBadge } from "@/components/StatusBadge";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/admin")({
