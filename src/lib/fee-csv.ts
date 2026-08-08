@@ -52,45 +52,122 @@ export type FeeRow = {
 };
 
 const ALIASES: Record<keyof Omit<FeeRow, "row_key">, string[]> = {
-  student_name: ["student name", "student", "name", "full name"],
-  student_email: ["student email", "email", "e-mail", "student e-mail"],
-  subject_code: ["subject code", "subject", "code", "stream"],
-  amount: ["amount", "fee", "fee amount", "amount due", "total"],
+  student_name: ["student name", "student", "name", "full name", "student full name"],
+  student_email: ["student email", "email", "e mail", "student e mail", "mail"],
+  subject_code: ["subject code", "subject", "course", "stream", "code", "class"],
+  amount: [
+    "amount",
+    "fee",
+    "fee amount",
+    "total fee",
+    "billed amount",
+    "pkr",
+    "amount due",
+    "total",
+    "fees",
+  ],
   currency: ["currency", "ccy"],
-  status: ["status", "payment status", "paid"],
-  term: ["term", "session", "batch"],
+  status: ["status", "payment status", "fee status", "state", "paid"],
+  term: ["term", "batch", "session", "month"],
   due_date: ["due date", "due"],
-  paid_on: ["paid on", "paid date", "payment date", "date paid"],
+  paid_on: ["paid on", "payment date", "date", "paid date", "date paid"],
   invoice_ref: ["invoice ref", "invoice", "invoice no", "reference", "ref"],
 };
 
 function normalizeHeader(h: string) {
-  return h.trim().toLowerCase().replace(/[_-]+/g, " ").replace(/\s+/g, " ");
+  return h
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
-function normalizeStatus(raw: string): string {
-  const v = raw.trim().toLowerCase();
-  if (!v) return "pending";
-  if (["paid", "settled", "yes", "true", "complete", "completed", "cleared"].includes(v))
-    return "paid";
-  if (["partial", "part", "partially paid", "installment"].includes(v)) return "partial";
-  if (["overdue", "late", "defaulted"].includes(v)) return "overdue";
-  return "pending";
+const PAID_WORDS = [
+  "paid",
+  "settled",
+  "cleared",
+  "completed",
+  "complete",
+  "done",
+  "yes",
+  "true",
+  "1",
+  "y",
+  "fully paid",
+  "payment received",
+  "received",
+];
+
+function normalizeStatus(raw: string, paidOn: string | null): string {
+  const v = raw.trim().toLowerCase().replace(/\s+/g, " ");
+  if (!v) return paidOn ? "paid" : "pending";
+  if (PAID_WORDS.includes(v)) return "paid";
+  if (["partial", "part", "partially paid", "installment", "instalment", "half"].includes(v))
+    return "partial";
+  if (["overdue", "late", "defaulted", "default"].includes(v)) return "overdue";
+  if (["unpaid", "pending", "due", "no", "false", "0", "not paid"].includes(v)) return "pending";
+  return paidOn ? "paid" : "pending";
 }
 
 function toDate(raw: string): string | null {
   const v = raw.trim();
   if (!v) return null;
-  const iso = /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : null;
-  if (iso) return iso;
+  if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(v)) {
+    const [y, m, d] = v.split("-").map(Number);
+    return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+  }
+  // d/m/y or m/d/y with - . or /
+  const parts = v.match(/^(\d{1,2})[/.-](\d{1,2})[/.-](\d{2,4})$/);
+  if (parts) {
+    let [, a, b, y] = parts as unknown as [string, string, string, string];
+    let day = Number(a);
+    let month = Number(b);
+    if (day > 12 && month <= 12) {
+      // already d/m
+    } else if (month > 12 && day <= 12) {
+      [day, month] = [month, day];
+    }
+    let year = Number(y);
+    if (year < 100) year += 2000;
+    if (month < 1 || month > 12 || day < 1 || day > 31) return null;
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  }
   const d = new Date(v);
   return Number.isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10);
 }
 
+/** "PKR 15,000", "Rs. 15000/-", "$1,250.50" → number */
 function toAmount(raw: string): number {
-  const n = Number(raw.replace(/[^0-9.-]/g, ""));
-  return Number.isFinite(n) ? n : 0;
+  let v = raw.trim().toLowerCase();
+  if (!v) return 0;
+  v = v
+    .replace(/pkr|rs\.?|usd|gbp|eur|aed|inr|\$|£|€|₨|₹/g, "")
+    .replace(/\/-|\/=/g, "")
+    .replace(/[\s'`]/g, "");
+  const negative = /^\(.*\)$/.test(v) || v.startsWith("-");
+  v = v.replace(/[()]/g, "");
+  // Treat commas as thousand separators unless used as a decimal comma.
+  if (/,\d{1,2}$/.test(v) && !/\.\d/.test(v)) v = v.replace(/,/g, ".");
+  else v = v.replace(/,/g, "");
+  const match = v.match(/-?\d+(\.\d+)?/);
+  if (!match) return 0;
+  const n = Number(match[0]);
+  if (!Number.isFinite(n)) return 0;
+  return negative ? -Math.abs(n) : n;
 }
+
+/** Guess currency from a raw amount cell when no currency column exists. */
+function currencyFromAmount(raw: string): string | null {
+  const v = raw.toLowerCase();
+  if (/\$|usd/.test(v)) return "USD";
+  if (/£|gbp/.test(v)) return "GBP";
+  if (/€|eur/.test(v)) return "EUR";
+  if (/pkr|rs\.?|₨/.test(v)) return "PKR";
+  if (/₹|inr/.test(v)) return "INR";
+  return null;
+}
+
 
 /** Map a parsed CSV grid into fee rows using flexible header names. */
 export function mapFeeRows(grid: string[][]): { rows: FeeRow[]; headers: string[] } {
