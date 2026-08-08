@@ -345,7 +345,7 @@ function AdminPortal() {
           </div>
           <div className="mt-4 grid grid-cols-3 gap-3 border-t pt-4 text-center">
             {[
-              [Banknote, "Collected", `${feePaid} seats`],
+              [Banknote, "Collected", `${feeTotals.paidCount} invoices`],
               [Layers, "Streams live", String(perStream.filter((p) => p.students).length)],
               [GraduationCap, "Scripts marked", String(graded.length)],
             ].map(([Icon, label, value]) => {
