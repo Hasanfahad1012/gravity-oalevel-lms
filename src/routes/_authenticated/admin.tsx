@@ -50,6 +50,7 @@ const CHART_COLORS = [
 ];
 
 function AdminPortal() {
+  const { roles } = useAuth();
   const subjects = useQuery({
     queryKey: ["subjects"],
     queryFn: async () => {
