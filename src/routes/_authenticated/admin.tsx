@@ -479,6 +479,64 @@ function AdminPortal() {
           </table>
         </div>
       </div>
+
+      <div className="plate mt-8 p-6">
+        <SectionHeading
+          eyebrow="Student payment status"
+          title="Fee ledger from the spreadsheet"
+          description={`${fees.length} rows · ${money(feeTotals.outstanding)} outstanding · ${feeTotals.overdueCount} overdue.`}
+        />
+        <div className="mt-6 overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="hairline text-left">
+                {["Student", "Subject", "Term", "Amount", "Paid on", "Status"].map((h) => (
+                  <th
+                    key={h}
+                    className="px-4 py-3 text-[11px] font-semibold tracking-[0.12em] text-muted-foreground uppercase"
+                  >
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y">
+              {fees.map((f) => (
+                <tr key={f.id} className="transition-colors hover:bg-muted/40">
+                  <td className="px-4 py-3.5">
+                    <span className="block font-medium">{f.student_name || f.student_email}</span>
+                    <span className="text-xs text-muted-foreground">{f.student_email}</span>
+                  </td>
+                  <td className="px-4 py-3.5">{f.subject_code || "—"}</td>
+                  <td className="px-4 py-3.5">{f.term || "—"}</td>
+                  <td className="px-4 py-3.5 tabular-nums">
+                    {f.currency} {Number(f.amount).toLocaleString()}
+                  </td>
+                  <td className="px-4 py-3.5 tabular-nums">{f.paid_on ?? "—"}</td>
+                  <td className="px-4 py-3.5">
+                    {f.status === "paid" ? (
+                      <StatusBadge tone="graded">Paid</StatusBadge>
+                    ) : f.status === "overdue" ? (
+                      <StatusBadge tone="risk">Overdue</StatusBadge>
+                    ) : f.status === "partial" ? (
+                      <StatusBadge tone="pending">Partial</StatusBadge>
+                    ) : (
+                      <StatusBadge tone="neutral">Pending</StatusBadge>
+                    )}
+                  </td>
+                </tr>
+              ))}
+              {!fees.length ? (
+                <tr>
+                  <td colSpan={6} className="py-12 text-center text-sm text-muted-foreground">
+                    No fee rows yet — connect a spreadsheet above and press sync.
+                  </td>
+                </tr>
+              ) : null}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </PortalShell>
   );
 }
