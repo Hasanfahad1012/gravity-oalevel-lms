@@ -23,5 +23,5 @@ export default defineMcp({
     listSubmissionsTool,
     listQuizAttemptsTool,
     gradeSubmissionTool,
-  ] as Parameters<typeof defineMcp>[0]["tools"],
+  ] as unknown as Parameters<typeof defineMcp>[0]["tools"],
 });
