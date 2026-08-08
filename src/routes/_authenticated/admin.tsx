@@ -342,7 +342,7 @@ function AdminPortal() {
           <SectionHeading
             eyebrow="Finance"
             title="Fee collection by subject"
-            description="Settled term fees against enrolled seats."
+            description="Total billed against collected, per subject in the synced sheet."
           />
           <div className="mt-6 h-[240px]">
             <ResponsiveContainer width="100%" height="100%">
