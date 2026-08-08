@@ -203,6 +203,8 @@ function AdminPortal() {
         <StatCard label="Registered users" value={people.length} hint="all roles" />
       </div>
 
+      <FeeSyncBar isAdmin={roles.includes("admin")} />
+
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <div className="plate p-6">
           <SectionHeading
