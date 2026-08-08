@@ -26,13 +26,15 @@ export const Route = createFileRoute("/auth")({
       },
     ],
   }),
-  validateSearch: (search: Record<string, unknown>) => ({
-    mode: search["mode"] === "signup" ? ("signup" as const) : ("login" as const),
-    next:
-      typeof search["next"] === "string" && search["next"].startsWith("/") && !search["next"].startsWith("//")
-        ? (search["next"] as string)
-        : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>) => {
+    const raw = search["next"];
+    const safe =
+      typeof raw === "string" && raw.startsWith("/") && !raw.startsWith("//") ? raw : null;
+    return {
+      mode: search["mode"] === "signup" ? ("signup" as const) : ("login" as const),
+      ...(safe ? { next: safe } : {}),
+    } as { mode: "login" | "signup"; next?: string };
+  },
   component: AuthPage,
 });
 
