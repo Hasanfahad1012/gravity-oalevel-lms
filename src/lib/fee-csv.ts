@@ -208,17 +208,21 @@ export function mapFeeRows(grid: string[][]): { rows: FeeRow[]; headers: string[
     if (seen.has(key)) key = `${key}#${idx}`;
     seen.add(key);
 
+    const rawAmount = at(r, cols.amount);
+    const paidOn = toDate(at(r, cols.paid_on));
+
     rows.push({
       row_key: key,
       student_name: name,
       student_email: email,
       subject_code: subject,
-      amount: toAmount(at(r, cols.amount)),
-      currency: at(r, cols.currency).toUpperCase() || "PKR",
-      status: normalizeStatus(at(r, cols.status)),
+      amount: toAmount(rawAmount),
+      currency:
+        at(r, cols.currency).toUpperCase() || currencyFromAmount(rawAmount) || "PKR",
+      status: normalizeStatus(at(r, cols.status), paidOn),
       term: at(r, cols.term),
       due_date: toDate(at(r, cols.due_date)),
-      paid_on: toDate(at(r, cols.paid_on)),
+      paid_on: paidOn,
       invoice_ref: invoice,
     });
   });
