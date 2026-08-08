@@ -398,6 +398,11 @@ function StudentPortal() {
             </div>
           ) : null}
         </TabsContent>
+
+        {/* ---------- MCQ PRACTICE ---------- */}
+        <TabsContent value="mcq" className="mt-8">
+          <McqPractice />
+        </TabsContent>
       </Tabs>
     </PortalShell>
   );
