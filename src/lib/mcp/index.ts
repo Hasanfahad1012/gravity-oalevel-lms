@@ -1,4 +1,4 @@
-import { auth, defineMcp } from "@lovable.dev/mcp-js";
+import { auth, defineMcp, type AnyToolDefinition } from "@lovable.dev/mcp-js";
 import listSubjectsTool from "./tools/list-subjects";
 import listEnrollmentsTool from "./tools/list-enrollments";
 import listSubmissionsTool from "./tools/list-submissions";
@@ -23,5 +23,5 @@ export default defineMcp({
     listSubmissionsTool,
     listQuizAttemptsTool,
     gradeSubmissionTool,
-  ],
+  ] as AnyToolDefinition[],
 });
