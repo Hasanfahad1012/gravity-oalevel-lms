@@ -165,6 +165,9 @@ function StudentPortal() {
           <TabsTrigger value="quizzes" className="rounded-full px-5">
             <Timer className="size-3.5" /> Quizzes
           </TabsTrigger>
+          <TabsTrigger value="mcq" className="rounded-full px-5">
+            <ListChecks className="size-3.5" /> MCQ practice
+          </TabsTrigger>
         </TabsList>
 
         {/* ---------- COURSES ---------- */}
