@@ -8,6 +8,7 @@ import {
   ChevronRight,
   ClipboardList,
   FileUp,
+  ListChecks,
   Loader2,
   PlayCircle,
   Timer,
@@ -27,6 +28,7 @@ import { useAuth } from "@/lib/auth";
 import { FALLBACK_MODULE, SYLLABUS } from "@/lib/syllabus";
 import { cn } from "@/lib/utils";
 import { QuizRunner } from "@/components/QuizRunner";
+import { McqPractice } from "@/components/McqPractice";
 
 export const Route = createFileRoute("/_authenticated/student")({
   head: () => ({
@@ -164,6 +166,9 @@ function StudentPortal() {
           </TabsTrigger>
           <TabsTrigger value="quizzes" className="rounded-full px-5">
             <Timer className="size-3.5" /> Quizzes
+          </TabsTrigger>
+          <TabsTrigger value="mcq" className="rounded-full px-5">
+            <ListChecks className="size-3.5" /> MCQ practice
           </TabsTrigger>
         </TabsList>
 
@@ -383,7 +388,10 @@ function StudentPortal() {
                   const pct = a.total ? Math.round((a.score / a.total) * 100) : 0;
                   return (
                     <li key={a.id} className="flex items-center gap-4 py-3">
-                      <span className="flex-1 text-sm font-medium">{quiz?.title ?? "Quiz"}</span>
+                      <span className="flex-1 text-sm font-medium">
+                        {quiz?.title ??
+                          `${a.subject_code || "MCQ"} · ${a.mode === "timed" ? "Timed paper" : "Practice"}`}
+                      </span>
                       <Progress value={pct} className="hidden h-1.5 w-40 sm:block" />
                       <span className="w-16 text-right text-sm font-semibold tabular-nums">
                         {a.score}/{a.total}
@@ -394,6 +402,11 @@ function StudentPortal() {
               </ul>
             </div>
           ) : null}
+        </TabsContent>
+
+        {/* ---------- MCQ PRACTICE ---------- */}
+        <TabsContent value="mcq" className="mt-8">
+          <McqPractice />
         </TabsContent>
       </Tabs>
     </PortalShell>
