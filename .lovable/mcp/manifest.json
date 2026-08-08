@@ -1,0 +1,222 @@
+{
+  "version": 1,
+  "sdk_version": "0.26.1",
+  "path": "/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://twxiegoobfcbnmbrphzj.supabase.co/auth/v1",
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "gravity-o-a-portal",
+      "version": "0.1.0",
+      "title": "Gravity O/A Portal"
+    },
+    "tools": [
+      {
+        "name": "list_subjects",
+        "title": "List subjects",
+        "description": "List the Cambridge O/A Level subjects offered by Gravity Institute.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "stream": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Optional stream filter, e.g. 'O Level' or 'A Level'."
+            }
+          },
+          "required": [
+            "stream"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_enrollments",
+        "title": "List enrollments",
+        "description": "List subject enrollments visible to the signed-in user (students see their own; staff see the academy).",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "subject_code": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Optional subject code filter, e.g. '9709'."
+            },
+            "limit": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Maximum rows to return (default 50)."
+            }
+          },
+          "required": [
+            "subject_code",
+            "limit"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_submissions",
+        "title": "List past-paper submissions",
+        "description": "List past-paper submissions visible to the signed-in user, optionally filtered by grading status.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "status": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "grading",
+                    "graded",
+                    "returned"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Optional grading status filter."
+            },
+            "limit": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Maximum rows to return (default 50)."
+            }
+          },
+          "required": [
+            "status",
+            "limit"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_quiz_attempts",
+        "title": "List quiz attempts",
+        "description": "List topical quiz attempts and scores visible to the signed-in user.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "limit": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Maximum rows to return (default 50)."
+            }
+          },
+          "required": [
+            "limit"
+          ]
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "grade_submission",
+        "title": "Grade a submission",
+        "description": "Record a mark and examiner feedback on a past-paper submission. Requires teacher or admin permissions.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "type": "object",
+          "properties": {
+            "submission_id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "description": "The submission id to grade."
+            },
+            "score": {
+              "type": "number",
+              "minimum": 0,
+              "description": "Marks awarded."
+            },
+            "examiner_feedback": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Examiner-style annotations for the student."
+            }
+          },
+          "required": [
+            "submission_id",
+            "score",
+            "examiner_feedback"
+          ]
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
