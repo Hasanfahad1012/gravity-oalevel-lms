@@ -91,10 +91,42 @@ function AdminPortal() {
       return data;
     },
   });
+  const feeRecords = useQuery({
+    queryKey: ["fee-records"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("fee_records")
+        .select("*")
+        .order("student_name");
+      if (error) throw error;
+      return data;
+    },
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
+  });
 
   const enrolls = enrollments.data ?? [];
   const subs = submissions.data ?? [];
   const people = profiles.data ?? [];
+  const fees = feeRecords.data ?? [];
+
+  const money = (n: number) =>
+    `${fees[0]?.currency ?? "PKR"} ${Math.round(n).toLocaleString()}`;
+
+  const feeTotals = useMemo(() => {
+    const collected = fees
+      .filter((f) => f.status === "paid")
+      .reduce((a, f) => a + Number(f.amount || 0), 0);
+    const billed = fees.reduce((a, f) => a + Number(f.amount || 0), 0);
+    return {
+      collected,
+      billed,
+      outstanding: billed - collected,
+      paidCount: fees.filter((f) => f.status === "paid").length,
+      overdueCount: fees.filter((f) => f.status === "overdue").length,
+      rate: billed ? Math.round((collected / billed) * 100) : 0,
+    };
+  }, [fees]);
 
   const perStream = useMemo(
     () =>
@@ -102,11 +134,14 @@ function AdminPortal() {
         code: s.code,
         name: `${s.code}`,
         students: enrolls.filter((e) => e.subject_code === s.code).length,
-        revenue: enrolls
-          .filter((e) => e.subject_code === s.code && e.term_fee_paid)
-          .reduce((a, e) => a + Number(e.fee_amount || 0), 0),
+        revenue: fees
+          .filter((f) => f.subject_code === s.code && f.status === "paid")
+          .reduce((a, f) => a + Number(f.amount || 0), 0),
+        outstanding: fees
+          .filter((f) => f.subject_code === s.code && f.status !== "paid")
+          .reduce((a, f) => a + Number(f.amount || 0), 0),
       })),
-    [subjects.data, enrolls],
+    [subjects.data, enrolls, fees],
   );
 
   const engagement = useMemo(() => {
@@ -123,7 +158,6 @@ function AdminPortal() {
     return days;
   }, [subs, attempts.data]);
 
-  const feePaid = enrolls.filter((e) => e.term_fee_paid).length;
   const graded = subs.filter((s) => s.status !== "pending");
   const throughput = subs.length ? Math.round((graded.length / subs.length) * 100) : 0;
 
