@@ -224,8 +224,9 @@ function AdminPortal() {
         <StatCard
           label="Fees settled"
           value={money(feeTotals.collected)}
-          hint={`${feeTotals.rate}% of ${money(feeTotals.billed)} billed`}
+          hint={`${feeTotals.rate}% of ${money(feeTotals.billed)} billed · ${money(feeTotals.outstanding)} outstanding`}
         />
+
 
         <StatCard label="Registered users" value={people.length} hint="all roles" />
       </div>
