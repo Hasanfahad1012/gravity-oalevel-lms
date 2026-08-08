@@ -369,7 +369,20 @@ function AdminPortal() {
                     fontSize: 12,
                   }}
                 />
-                <Bar dataKey="revenue" radius={[6, 6, 0, 0]} fill={CHART_COLORS[1]} />
+                <Bar
+                  dataKey="billed"
+                  name="Billed"
+                  radius={[6, 6, 0, 0]}
+                  fill={CHART_COLORS[4]}
+                  fillOpacity={0.35}
+                />
+                <Bar
+                  dataKey="collected"
+                  name="Collected"
+                  radius={[6, 6, 0, 0]}
+                  fill={CHART_COLORS[1]}
+                />
+
               </BarChart>
             </ResponsiveContainer>
           </div>
