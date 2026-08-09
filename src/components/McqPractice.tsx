@@ -30,7 +30,7 @@ import { cn } from "@/lib/utils";
 const LETTERS = ["A", "B", "C", "D"] as const;
 type Letter = (typeof LETTERS)[number];
 
-const MCQ_SUBJECTS = [
+export const MCQ_SUBJECTS = [
   { code: "9702", name: "Physics (P1)", level: "A Level" },
   { code: "9701", name: "Chemistry (P1)", level: "A Level" },
   { code: "9700", name: "Biology (P1)", level: "A Level" },
