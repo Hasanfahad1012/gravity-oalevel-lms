@@ -540,7 +540,14 @@ function AdminPortal() {
             </thead>
             <tbody className="divide-y">
               {fees.map((f) => (
-                <tr key={f.id} className="transition-colors hover:bg-muted/40">
+                <tr
+                  key={f.id}
+                  className={cn(
+                    "transition-colors hover:bg-muted/40",
+                    matchesFocus(focus?.query, f.student_name, f.student_email) &&
+                      "bg-gold-soft/60 ring-1 ring-inset ring-[oklch(0.68_0.088_74)]",
+                  )}
+                >
                   <td className="px-4 py-3.5">
                     <span className="block font-medium">{f.student_name || f.student_email}</span>
                     <span className="text-xs text-muted-foreground">{f.student_email}</span>
