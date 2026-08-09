@@ -518,7 +518,7 @@ function AdminPortal() {
         </div>
       </div>
 
-      <div className="plate mt-8 p-6">
+      <div id="fee-ledger" className="plate mt-8 scroll-mt-24 p-6">
         <SectionHeading
           eyebrow="Student payment status"
           title="Fee ledger from the spreadsheet"
