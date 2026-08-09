@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import {
   Area,
   AreaChart,
@@ -23,6 +23,7 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { matchesFocus, useFocus } from "@/lib/focus";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -51,6 +52,12 @@ const CHART_COLORS = [
 
 function AdminPortal() {
   const { roles } = useAuth();
+  const focus = useFocus();
+  useEffect(() => {
+    if (!focus?.section) return;
+    document.getElementById(focus.section)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [focus]);
+
   const subjects = useQuery({
     queryKey: ["subjects"],
     queryFn: async () => {
@@ -231,7 +238,9 @@ function AdminPortal() {
         <StatCard label="Registered users" value={people.length} hint="all roles" />
       </div>
 
-      <FeeSyncBar isAdmin={roles.includes("admin")} />
+      <div id="fee-sync" className="scroll-mt-24">
+        <FeeSyncBar isAdmin={roles.includes("admin")} />
+      </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
         <div className="plate p-6">
@@ -449,7 +458,7 @@ function AdminPortal() {
         </div>
       </div>
 
-      <div className="mt-8 plate p-6">
+      <div id="risk-register" className="mt-8 plate scroll-mt-24 p-6">
         <SectionHeading
           eyebrow="Risk register"
           title="Students needing intervention"
@@ -474,7 +483,14 @@ function AdminPortal() {
                 const danger = avg != null && avg < 55;
                 const watch = avg != null && avg >= 55 && avg < 70;
                 return (
-                  <tr key={p.id} className="transition-colors hover:bg-muted/40">
+                  <tr
+                    key={p.id}
+                    className={cn(
+                      "transition-colors hover:bg-muted/40",
+                      matchesFocus(focus?.query, p.full_name, p.email) &&
+                        "bg-gold-soft/60 ring-1 ring-inset ring-[oklch(0.68_0.088_74)]",
+                    )}
+                  >
                     <td className="px-4 py-3.5">
                       <span className="block font-medium">{p.full_name || p.email}</span>
                       <span className="text-xs text-muted-foreground">{p.email}</span>
@@ -518,7 +534,7 @@ function AdminPortal() {
         </div>
       </div>
 
-      <div className="plate mt-8 p-6">
+      <div id="fee-ledger" className="plate mt-8 scroll-mt-24 p-6">
         <SectionHeading
           eyebrow="Student payment status"
           title="Fee ledger from the spreadsheet"
@@ -540,7 +556,14 @@ function AdminPortal() {
             </thead>
             <tbody className="divide-y">
               {fees.map((f) => (
-                <tr key={f.id} className="transition-colors hover:bg-muted/40">
+                <tr
+                  key={f.id}
+                  className={cn(
+                    "transition-colors hover:bg-muted/40",
+                    matchesFocus(focus?.query, f.student_name, f.student_email) &&
+                      "bg-gold-soft/60 ring-1 ring-inset ring-[oklch(0.68_0.088_74)]",
+                  )}
+                >
                   <td className="px-4 py-3.5">
                     <span className="block font-medium">{f.student_name || f.student_email}</span>
                     <span className="text-xs text-muted-foreground">{f.student_email}</span>

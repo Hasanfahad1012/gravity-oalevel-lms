@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import {
   BookOpen,
@@ -27,6 +27,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { FALLBACK_MODULE, SYLLABUS } from "@/lib/syllabus";
 import { cn } from "@/lib/utils";
+import { useFocus } from "@/lib/focus";
 import { QuizRunner } from "@/components/QuizRunner";
 import { McqPractice } from "@/components/McqPractice";
 
@@ -128,6 +129,11 @@ function StudentPortal() {
   const enrolledSubjects = (subjects.data ?? []).filter((s) => enrolledCodes.has(s.code));
 
   const [activeCode, setActiveCode] = useState<string | null>(null);
+  const [tab, setTab] = useState("courses");
+  const focus = useFocus();
+  useEffect(() => {
+    if (focus?.tab) setTab(focus.tab);
+  }, [focus]);
   const activeSubject = enrolledSubjects.find((s) => s.code === activeCode) ?? enrolledSubjects[0];
   const modul = activeSubject ? (SYLLABUS[activeSubject.code] ?? FALLBACK_MODULE) : FALLBACK_MODULE;
 
@@ -156,7 +162,7 @@ function StudentPortal() {
         <StatCard label="Quizzes taken" value={(attempts.data ?? []).length} hint="all time" />
       </div>
 
-      <Tabs defaultValue="courses" className="mt-10">
+      <Tabs value={tab} onValueChange={setTab} className="mt-10">
         <TabsList className="h-11 rounded-full bg-muted/70 p-1">
           <TabsTrigger value="courses" className="rounded-full px-5">
             <BookOpen className="size-3.5" /> Courses

@@ -1,6 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { GraduationCap, LogOut, Lock, ShieldCheck, Users } from "lucide-react";
 import { Wordmark } from "@/components/Wordmark";
+import { CommandBar, CommandBarTrigger, useCommandBar } from "@/components/CommandBar";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth, type AppRole } from "@/lib/auth";
@@ -77,15 +78,20 @@ export function PortalShell({
 }) {
   const { profile, primaryRole, signOut } = useAuth();
   const navigate = useNavigate();
+  const { open, setOpen } = useCommandBar();
 
   return (
     <div className="min-h-screen bg-background">
+      <CommandBar open={open} onOpenChange={setOpen} />
       <header className="glass sticky top-0 z-40 border-b">
         <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between gap-4 px-5 lg:px-8">
           <Link to="/">
             <Wordmark />
           </Link>
-          <RoleSwitcher />
+          <div className="flex items-center gap-2">
+            <RoleSwitcher />
+            <CommandBarTrigger onClick={() => setOpen(true)} />
+          </div>
           <div className="flex items-center gap-3">
             <div className="hidden text-right leading-tight md:block">
               <p className="text-[13px] font-semibold">{profile?.full_name || profile?.email}</p>
