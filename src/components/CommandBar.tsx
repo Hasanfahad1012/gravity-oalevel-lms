@@ -28,10 +28,10 @@ export function CommandBarTrigger({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="glass hidden items-center gap-2 rounded-full py-1.5 pr-2 pl-3.5 text-[13px] text-muted-foreground transition-colors hover:text-foreground md:flex"
+      className="glass flex items-center gap-2 rounded-full py-1.5 pr-2 pl-3 text-[13px] text-muted-foreground transition-colors hover:text-foreground"
     >
       <Search className="size-3.5" />
-      <span>Search or jump to…</span>
+      <span className="hidden lg:inline">Search or jump to…</span>
       <kbd className="rounded-md border bg-muted/70 px-1.5 py-0.5 font-mono text-[10px] tracking-wide">
         ⌘K
       </kbd>
