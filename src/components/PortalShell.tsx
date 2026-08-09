@@ -1,6 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { GraduationCap, LogOut, Lock, ShieldCheck, Users } from "lucide-react";
 import { Wordmark } from "@/components/Wordmark";
+import { CommandBar, CommandBarTrigger, useCommandBar } from "@/components/CommandBar";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useAuth, type AppRole } from "@/lib/auth";
