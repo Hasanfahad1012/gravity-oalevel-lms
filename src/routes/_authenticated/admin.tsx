@@ -23,6 +23,7 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { cn } from "@/lib/utils";
+import { matchesFocus, useFocus } from "@/lib/focus";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
