@@ -52,6 +52,12 @@ const CHART_COLORS = [
 
 function AdminPortal() {
   const { roles } = useAuth();
+  const focus = useFocus();
+  useEffect(() => {
+    if (!focus?.section) return;
+    document.getElementById(focus.section)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [focus]);
+
   const subjects = useQuery({
     queryKey: ["subjects"],
     queryFn: async () => {
