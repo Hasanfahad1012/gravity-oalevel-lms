@@ -99,8 +99,9 @@ export function McqPractice() {
 
   const [level, setLevel] = useState("all");
   const [subject, setSubject] = useState("9702");
-  const [fromYear, setFromYear] = useState("2015");
-  const [toYear, setToYear] = useState("2025");
+  const [fromYear, setFromYear] = useState("2023");
+  const [toYear, setToYear] = useState("2026");
+
   const [mode, setMode] = useState<"practice" | "timed">("practice");
 
   const visibleSubjects = MCQ_SUBJECTS.filter((s) => level === "all" || s.level === level);
