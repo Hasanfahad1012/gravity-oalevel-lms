@@ -31,20 +31,33 @@ const LETTERS = ["A", "B", "C", "D"] as const;
 type Letter = (typeof LETTERS)[number];
 
 const MCQ_SUBJECTS = [
-  { code: "9702", name: "Physics", level: "A Level" },
-  { code: "9701", name: "Chemistry", level: "A Level" },
-  { code: "9700", name: "Biology", level: "A Level" },
-  { code: "9708", name: "Economics", level: "A Level" },
-  { code: "9706", name: "Accounting", level: "A Level" },
-  { code: "0625", name: "Physics", level: "O Level" },
-  { code: "0620", name: "Chemistry", level: "O Level" },
-  { code: "0610", name: "Biology", level: "O Level" },
-  { code: "0455", name: "Economics", level: "O Level" },
-  { code: "7707", name: "Accounting", level: "O Level" },
+  { code: "9702", name: "Physics (P1)", level: "A Level" },
+  { code: "9701", name: "Chemistry (P1)", level: "A Level" },
+  { code: "9700", name: "Biology (P1)", level: "A Level" },
+  { code: "9708", name: "Economics (P1 AS / P3 A2)", level: "A Level" },
+  { code: "9706", name: "Accounting (P1)", level: "A Level" },
+  { code: "0620", name: "Chemistry — IGCSE (P1/2)", level: "O Level" },
+  { code: "5070", name: "Chemistry — O Level (P1/2)", level: "O Level" },
+  { code: "0625", name: "Physics — IGCSE (P1/2)", level: "O Level" },
+  { code: "5054", name: "Physics — O Level (P1/2)", level: "O Level" },
+  { code: "0610", name: "Biology — IGCSE (P1/2)", level: "O Level" },
+  { code: "5090", name: "Biology — O Level (P1/2)", level: "O Level" },
+  { code: "0455", name: "Economics — IGCSE (P1)", level: "O Level" },
+  { code: "2281", name: "Economics — O Level (P1)", level: "O Level" },
+  { code: "0452", name: "Accounting — IGCSE (P1)", level: "O Level" },
+  { code: "7707", name: "Accounting — O Level (P1)", level: "O Level" },
+  { code: "0653", name: "Combined Science — IGCSE (P1/2)", level: "O Level" },
+  { code: "5129", name: "Combined Science — O Level (P1/2)", level: "O Level" },
+  { code: "0654", name: "Co-ordinated Sciences (P1/2)", level: "O Level" },
+  { code: "0680", name: "Environmental Management — IGCSE", level: "O Level" },
+  { code: "5014", name: "Environmental Management — O Level", level: "O Level" },
+  { code: "5180", name: "Marine Science", level: "O Level" },
+  { code: "0454", name: "Enterprise", level: "O Level" },
   { code: "0580", name: "Mathematics", level: "O Level" },
 ];
 
-const YEARS = Array.from({ length: 11 }, (_, i) => 2015 + i);
+const YEARS = Array.from({ length: 12 }, (_, i) => 2015 + i);
+
 
 interface Row {
   id: string;
