@@ -449,7 +449,7 @@ function AdminPortal() {
         </div>
       </div>
 
-      <div className="mt-8 plate p-6">
+      <div id="risk-register" className="mt-8 plate scroll-mt-24 p-6">
         <SectionHeading
           eyebrow="Risk register"
           title="Students needing intervention"
