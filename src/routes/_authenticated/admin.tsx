@@ -474,7 +474,14 @@ function AdminPortal() {
                 const danger = avg != null && avg < 55;
                 const watch = avg != null && avg >= 55 && avg < 70;
                 return (
-                  <tr key={p.id} className="transition-colors hover:bg-muted/40">
+                  <tr
+                    key={p.id}
+                    className={cn(
+                      "transition-colors hover:bg-muted/40",
+                      matchesFocus(focus?.query, p.full_name, p.email) &&
+                        "bg-gold-soft/60 ring-1 ring-inset ring-[oklch(0.68_0.088_74)]",
+                    )}
+                  >
                     <td className="px-4 py-3.5">
                       <span className="block font-medium">{p.full_name || p.email}</span>
                       <span className="text-xs text-muted-foreground">{p.email}</span>
