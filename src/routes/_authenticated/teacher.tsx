@@ -149,13 +149,22 @@ function TeacherPortal() {
         <StatCard label="Students" value={(students.data ?? []).length} hint="on roll" />
       </div>
 
-      <Tabs defaultValue="queue" className="mt-10">
-        <TabsList className="h-11 rounded-full bg-muted/70 p-1">
+      <Tabs value={tab} onValueChange={setTab} className="mt-10">
+        <TabsList className="h-11 flex-wrap rounded-full bg-muted/70 p-1">
           <TabsTrigger value="queue" className="rounded-full px-5">
             <PenLine className="size-3.5" /> Grading queue
           </TabsTrigger>
           <TabsTrigger value="classes" className="rounded-full px-5">
             <Users className="size-3.5" /> Class management
+          </TabsTrigger>
+          <TabsTrigger value="assignments" className="rounded-full px-5">
+            <FileUp className="size-3.5" /> Assignments &amp; PDFs
+          </TabsTrigger>
+          <TabsTrigger value="lectures" className="rounded-full px-5">
+            <Video className="size-3.5" /> Lectures &amp; Videos
+          </TabsTrigger>
+          <TabsTrigger value="mcqs" className="rounded-full px-5">
+            <ListChecks className="size-3.5" /> Quizzes &amp; MCQs
           </TabsTrigger>
         </TabsList>
 
