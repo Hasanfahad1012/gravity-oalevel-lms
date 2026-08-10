@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      assignments: {
+        Row: {
+          batch: string
+          created_at: string
+          description: string
+          due_date: string | null
+          file_name: string
+          file_url: string | null
+          id: string
+          subject_code: string
+          teacher_id: string
+          title: string
+          total_marks: number
+          updated_at: string
+        }
+        Insert: {
+          batch?: string
+          created_at?: string
+          description?: string
+          due_date?: string | null
+          file_name?: string
+          file_url?: string | null
+          id?: string
+          subject_code?: string
+          teacher_id: string
+          title?: string
+          total_marks?: number
+          updated_at?: string
+        }
+        Update: {
+          batch?: string
+          created_at?: string
+          description?: string
+          due_date?: string | null
+          file_name?: string
+          file_url?: string | null
+          id?: string
+          subject_code?: string
+          teacher_id?: string
+          title?: string
+          total_marks?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       enrollments: {
         Row: {
           created_at: string
@@ -136,6 +181,45 @@ export type Database = {
           sheet_url?: string | null
           singleton?: boolean
           updated_at?: string
+        }
+        Relationships: []
+      }
+      lectures: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string
+          notes_url: string | null
+          subject_code: string
+          teacher_id: string
+          title: string
+          topic: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string
+          notes_url?: string | null
+          subject_code?: string
+          teacher_id: string
+          title?: string
+          topic?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string
+          notes_url?: string | null
+          subject_code?: string
+          teacher_id?: string
+          title?: string
+          topic?: string
+          updated_at?: string
+          video_url?: string | null
         }
         Relationships: []
       }
