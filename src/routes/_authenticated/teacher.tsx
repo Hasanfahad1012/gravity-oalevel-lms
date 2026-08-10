@@ -411,6 +411,18 @@ function TeacherPortal() {
             </table>
           </div>
         </TabsContent>
+
+        <TabsContent value="assignments" className="mt-8">
+          <AssignmentsHub onViewScripts={() => setTab("queue")} />
+        </TabsContent>
+
+        <TabsContent value="lectures" className="mt-8">
+          <LecturesHub />
+        </TabsContent>
+
+        <TabsContent value="mcqs" className="mt-8">
+          <McqCreator />
+        </TabsContent>
       </Tabs>
     </PortalShell>
   );
