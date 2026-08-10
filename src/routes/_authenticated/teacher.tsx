@@ -1,11 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-import { FileText, Loader2, PenLine, Search, Users } from "lucide-react";
+import {
+  FileText,
+  FileUp,
+  ListChecks,
+  Loader2,
+  PenLine,
+  Search,
+  Users,
+  Video,
+} from "lucide-react";
 import { PortalShell } from "@/components/PortalShell";
 import { SectionHeading, StatCard } from "@/components/Primitives";
 import { StatusBadge, statusTone } from "@/components/StatusBadge";
+import { AssignmentsHub } from "@/components/teacher/AssignmentsHub";
+import { LecturesHub } from "@/components/teacher/LecturesHub";
+import { McqCreator } from "@/components/teacher/McqCreator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +26,7 @@ import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useFocus } from "@/lib/focus";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/teacher")({
