@@ -103,6 +103,12 @@ function TeacherPortal() {
   const [feedback, setFeedback] = useState("");
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState("");
+  const [tab, setTab] = useState("queue");
+  const focus = useFocus();
+
+  useEffect(() => {
+    if (focus?.tab) setTab(focus.tab);
+  }, [focus]);
 
   const queue = (submissions.data ?? []).filter(
     (s) =>
