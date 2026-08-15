@@ -426,5 +426,6 @@ function TeacherPortal() {
         </TabsContent>
       </Tabs>
     </PortalShell>
+    <FloatingWhatsAppButton />
   );
 }
