@@ -1,12 +1,27 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 
+const WHATSAPP_URL = "https://wa.me/923332170624";
+
 export function FloatingWhatsAppButton() {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // Open the WhatsApp chat in a real top-level window/tab, bypassing any
+    // embedded preview / iframe behaviour that can trigger ERR_BLOCKED_BY_RESPONSE.
+    const win = window.open(WHATSAPP_URL, "_blank", "noopener,noreferrer");
+    if (win) {
+      e.preventDefault();
+    }
+    // If the popup was blocked, fall back to the anchor's default _blank navigation.
+  };
+
   return (
     <a
-      href="https://wa.me/923332170624"
+      href={WHATSAPP_URL}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Contact Admin on WhatsApp"
+      onClick={handleClick}
       className={cn(
         "fixed bottom-6 right-6 z-50 flex items-center gap-2.5 rounded-full px-4 py-3 text-sm font-semibold text-white shadow-[0_10px_28px_-10px_rgba(37,211,102,0.5)]",
         "transition-all duration-200 ease-out hover:scale-105 hover:shadow-[0_14px_32px_-10px_rgba(37,211,102,0.6)]",
@@ -27,3 +42,4 @@ export function FloatingWhatsAppButton() {
     </a>
   );
 }
+
