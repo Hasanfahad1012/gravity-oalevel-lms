@@ -28,6 +28,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useFocus } from "@/lib/focus";
 import { cn } from "@/lib/utils";
+import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 
 export const Route = createFileRoute("/_authenticated/teacher")({
   head: () => ({

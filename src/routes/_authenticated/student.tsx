@@ -30,6 +30,7 @@ import { cn } from "@/lib/utils";
 import { useFocus } from "@/lib/focus";
 import { QuizRunner } from "@/components/QuizRunner";
 import { McqPractice } from "@/components/McqPractice";
+import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 
 export const Route = createFileRoute("/_authenticated/student")({
   head: () => ({
