@@ -419,7 +419,8 @@ function StudentPortal() {
       </Tabs>
     </PortalShell>
     <FloatingWhatsAppButton />
-  );
+  </>
+);
 }
 
 interface SubmissionRow {
