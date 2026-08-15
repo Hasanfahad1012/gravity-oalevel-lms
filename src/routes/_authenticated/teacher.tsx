@@ -28,6 +28,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { useFocus } from "@/lib/focus";
 import { cn } from "@/lib/utils";
+import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 
 export const Route = createFileRoute("/_authenticated/teacher")({
   head: () => ({
@@ -160,7 +161,8 @@ function TeacherPortal() {
   const firstName = (profile?.full_name || "").split(" ")[0] || "Teacher";
 
   return (
-    <PortalShell title={`Grading desk, ${firstName}.`} subtitle="Teacher Portal">
+    <>
+      <PortalShell title={`Grading desk, ${firstName}.`} subtitle="Teacher Portal">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="In queue" value={queue.length} accent hint="awaiting marks" />
         <StatCard label="Marked" value={gradedByMe} hint="this session" />
@@ -425,5 +427,7 @@ function TeacherPortal() {
         </TabsContent>
       </Tabs>
     </PortalShell>
-  );
+    <FloatingWhatsAppButton />
+  </>
+);
 }

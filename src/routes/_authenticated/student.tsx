@@ -30,6 +30,7 @@ import { cn } from "@/lib/utils";
 import { useFocus } from "@/lib/focus";
 import { QuizRunner } from "@/components/QuizRunner";
 import { McqPractice } from "@/components/McqPractice";
+import { FloatingWhatsAppButton } from "@/components/FloatingWhatsAppButton";
 
 export const Route = createFileRoute("/_authenticated/student")({
   head: () => ({
@@ -150,7 +151,8 @@ function StudentPortal() {
   const firstName = (profile?.full_name || "").split(" ")[0] || "there";
 
   return (
-    <PortalShell title={`Good to see you, ${firstName}.`} subtitle="Student Portal">
+    <>
+      <PortalShell title={`Good to see you, ${firstName}.`} subtitle="Student Portal">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Active courses" value={enrolledSubjects.length} hint="this term" />
         <StatCard
@@ -416,7 +418,9 @@ function StudentPortal() {
         </TabsContent>
       </Tabs>
     </PortalShell>
-  );
+    <FloatingWhatsAppButton />
+  </>
+);
 }
 
 interface SubmissionRow {
