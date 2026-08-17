@@ -5,6 +5,7 @@ import { Wordmark } from "@/components/Wordmark";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import facultyImage from "@/assets/gravity-faculty.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
