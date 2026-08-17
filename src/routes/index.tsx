@@ -102,36 +102,9 @@ function Landing() {
           aria-hidden
           className="pointer-events-none absolute top-[-18rem] left-1/2 size-[42rem] -translate-x-1/2 rounded-full bg-gold/10 blur-[120px]"
         />
-        <div className="relative mx-auto max-w-[1240px] px-5 pt-24 pb-20 lg:px-8">
-          <div className="grid items-center gap-12 lg:grid-cols-2">
-            <div className="rise max-w-3xl">
-              <span className="inline-flex items-center gap-2 rounded-full bg-gold-soft px-3 py-1 text-[11px] font-semibold tracking-[0.14em] text-accent-foreground uppercase ring-1 ring-gold/25">
-                Cambridge O &amp; A Level
-              </span>
-              <h1 className="mt-6 text-[clamp(2.6rem,6vw,4.4rem)] leading-[1.02] font-semibold tracking-[-0.035em] text-balance">
-                The centre of success for
-                <span className="block text-muted-foreground">
-                  serious Cambridge candidates.
-                </span>
-              </h1>
-              <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-muted-foreground">
-                Gravity Institute runs Accounting 7707, Economics 9708, Business 9609 and
-                Mathematics 9709 as one continuous system — chapter teaching, topical past papers,
-                examiner marking and live performance analytics.
-              </p>
-              <div className="mt-9 flex flex-wrap items-center gap-3">
-                <Button asChild size="lg">
-                  <Link to="/auth" search={{ mode: "signup" }}>
-                    Create your account <ArrowRight className="size-4" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg">
-                  <a href="#subjects">Browse the syllabus</a>
-                </Button>
-              </div>
-            </div>
-
-            <div className="relative rise delay-100">
+        <div className="relative mx-auto max-w-[1240px] px-5 pt-16 pb-12 lg:pt-24 lg:pb-20">
+          <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
+            <div className="relative order-first rise lg:order-last">
               <div
                 aria-hidden
                 className="absolute -inset-4 rounded-[2rem] bg-gold/10 blur-2xl"
@@ -152,19 +125,46 @@ function Landing() {
                 </p>
               </div>
             </div>
+
+            <div className="rise max-w-3xl">
+              <span className="inline-flex items-center gap-2 rounded-full bg-gold-soft px-3 py-1 text-[11px] font-semibold tracking-[0.14em] text-accent-foreground uppercase ring-1 ring-gold/25">
+                Cambridge O &amp; A Level
+              </span>
+              <h1 className="mt-5 text-[clamp(2.2rem,6vw,4.4rem)] leading-[1.02] font-semibold tracking-[-0.035em] text-balance lg:mt-6">
+                The centre of success for
+                <span className="block text-muted-foreground">
+                  serious Cambridge candidates.
+                </span>
+              </h1>
+              <p className="mt-4 max-w-xl text-[16px] leading-relaxed text-muted-foreground lg:mt-6 lg:text-[17px]">
+                Gravity Institute runs Accounting 7707, Economics 9708, Business 9609 and
+                Mathematics 9709 as one continuous system — chapter teaching, topical past papers,
+                examiner marking and live performance analytics.
+              </p>
+              <div className="mt-7 flex flex-wrap items-center gap-3 lg:mt-9">
+                <Button asChild size="lg">
+                  <Link to="/auth" search={{ mode: "signup" }}>
+                    Create your account <ArrowRight className="size-4" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg">
+                  <a href="#subjects">Browse the syllabus</a>
+                </Button>
+              </div>
+            </div>
           </div>
 
-          <dl className="mt-20 grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-3">
+          <dl className="mt-10 grid gap-px overflow-hidden rounded-2xl border bg-border sm:grid-cols-3 lg:mt-20">
             {[
               ["1,480+", "Papers marked this session"],
               ["A* / A", "62% of the 2025 A Level cohort"],
               ["11 yrs", "Cambridge examiner experience"],
             ].map(([v, l]) => (
-              <div key={l} className="bg-card px-6 py-7">
-                <dt className="font-[family-name:var(--font-display)] text-3xl font-semibold">
+              <div key={l} className="bg-card px-5 py-5 lg:px-6 lg:py-7">
+                <dt className="font-[family-name:var(--font-display)] text-2xl font-semibold lg:text-3xl">
                   {v}
                 </dt>
-                <dd className="mt-1.5 text-[13px] text-muted-foreground">{l}</dd>
+                <dd className="mt-1.5 text-[12px] text-muted-foreground lg:text-[13px]">{l}</dd>
               </div>
             ))}
           </dl>
