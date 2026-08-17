@@ -102,30 +102,8 @@ function Landing() {
           aria-hidden
           className="pointer-events-none absolute top-[-18rem] left-1/2 size-[42rem] -translate-x-1/2 rounded-full bg-gold/10 blur-[120px]"
         />
-        <div className="relative mx-auto max-w-[1240px] px-5 pt-16 pb-12 lg:pt-24 lg:pb-20">
-          <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
-            <div className="relative order-first rise lg:order-last">
-              <div
-                aria-hidden
-                className="absolute -inset-4 rounded-[2rem] bg-gold/10 blur-2xl"
-              />
-              <img
-                src={facultyImage.url}
-                alt="Gravity Institute faculty members across Grade X, Commerce, Science and General departments"
-                className="relative w-full rounded-2xl border bg-card shadow-2xl shadow-ink/10 ring-1 ring-border"
-                loading="eager"
-                decoding="async"
-              />
-              <div className="absolute -bottom-5 -left-5 rounded-xl border bg-card/95 px-4 py-3 shadow-lg backdrop-blur-sm ring-1 ring-border">
-                <p className="text-[11px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
-                  Bahadurabad &amp; Defence
-                </p>
-                <p className="font-[family-name:var(--font-display)] text-lg font-semibold">
-                  Experienced Faculty
-                </p>
-              </div>
-            </div>
-
+        <div className="relative mx-auto max-w-[1240px] px-5 pt-12 pb-12 lg:pt-20 lg:pb-20">
+          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             <div className="rise max-w-3xl">
               <span className="inline-flex items-center gap-2 rounded-full bg-gold-soft px-3 py-1 text-[11px] font-semibold tracking-[0.14em] text-accent-foreground uppercase ring-1 ring-gold/25">
                 Cambridge O &amp; A Level
@@ -150,6 +128,28 @@ function Landing() {
                 <Button asChild variant="outline" size="lg">
                   <a href="#subjects">Browse the syllabus</a>
                 </Button>
+              </div>
+            </div>
+
+            <div className="relative rise">
+              <div
+                aria-hidden
+                className="absolute -inset-4 rounded-[2rem] bg-gold/10 blur-2xl"
+              />
+              <img
+                src={facultyImage.url}
+                alt="Gravity Institute faculty members across Grade X, Commerce, Science and General departments"
+                className="relative w-full rounded-2xl border bg-card shadow-2xl shadow-ink/10 ring-1 ring-border"
+                loading="eager"
+                decoding="async"
+              />
+              <div className="absolute -bottom-5 left-4 rounded-xl border bg-card/95 px-4 py-3 shadow-lg backdrop-blur-sm ring-1 ring-border lg:left-6">
+                <p className="text-[11px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+                  Bahadurabad &amp; Defence
+                </p>
+                <p className="font-[family-name:var(--font-display)] text-lg font-semibold">
+                  Experienced Faculty
+                </p>
               </div>
             </div>
           </div>
