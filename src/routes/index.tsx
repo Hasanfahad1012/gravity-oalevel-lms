@@ -103,23 +103,23 @@ function Landing() {
           className="pointer-events-none absolute top-[-18rem] left-1/2 size-[42rem] -translate-x-1/2 rounded-full bg-gold/10 blur-[120px]"
         />
         <div className="relative mx-auto max-w-[1240px] px-5 pt-12 pb-12 lg:pt-20 lg:pb-20">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+          <div className="grid items-start gap-6 sm:grid-cols-2 sm:gap-8 lg:gap-16">
             <div className="rise max-w-3xl">
               <span className="inline-flex items-center gap-2 rounded-full bg-gold-soft px-3 py-1 text-[11px] font-semibold tracking-[0.14em] text-accent-foreground uppercase ring-1 ring-gold/25">
                 Cambridge O &amp; A Level
               </span>
-              <h1 className="mt-5 text-[clamp(2.2rem,6vw,4.4rem)] leading-[1.02] font-semibold tracking-[-0.035em] text-balance lg:mt-6">
+              <h1 className="mt-4 text-[clamp(1.8rem,5vw,4.4rem)] leading-[1.05] font-semibold tracking-[-0.03em] text-balance lg:mt-5">
                 The centre of success for
                 <span className="block text-muted-foreground">
                   serious Cambridge candidates.
                 </span>
               </h1>
-              <p className="mt-4 max-w-xl text-[16px] leading-relaxed text-muted-foreground lg:mt-6 lg:text-[17px]">
+              <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted-foreground lg:mt-5 lg:text-[17px]">
                 Gravity Institute runs Accounting 7707, Economics 9708, Business 9609 and
                 Mathematics 9709 as one continuous system — chapter teaching, topical past papers,
                 examiner marking and live performance analytics.
               </p>
-              <div className="mt-7 flex flex-wrap items-center gap-3 lg:mt-9">
+              <div className="mt-5 flex flex-wrap items-center gap-3 lg:mt-8">
                 <Button asChild size="lg">
                   <Link to="/auth" search={{ mode: "signup" }}>
                     Create your account <ArrowRight className="size-4" />
@@ -143,11 +143,11 @@ function Landing() {
                 loading="eager"
                 decoding="async"
               />
-              <div className="absolute -bottom-5 left-4 rounded-xl border bg-card/95 px-4 py-3 shadow-lg backdrop-blur-sm ring-1 ring-border lg:left-6">
-                <p className="text-[11px] font-semibold tracking-[0.12em] text-muted-foreground uppercase">
+              <div className="absolute -bottom-5 left-4 rounded-xl border bg-card/95 px-3 py-2 shadow-lg backdrop-blur-sm ring-1 ring-border lg:left-6 lg:px-4 lg:py-3">
+                <p className="text-[10px] font-semibold tracking-[0.12em] text-muted-foreground uppercase lg:text-[11px]">
                   Bahadurabad &amp; Defence
                 </p>
-                <p className="font-[family-name:var(--font-display)] text-lg font-semibold">
+                <p className="font-[family-name:var(--font-display)] text-base font-semibold lg:text-lg">
                   Experienced Faculty
                 </p>
               </div>
